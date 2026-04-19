@@ -1680,16 +1680,6 @@
             }
         });
 
-        copyBtn.addEventListener('click', function() {
-            shareLink.select();
-            document.execCommand('copy');
-            playSuccessSound();
-            copyBtn.textContent = '已复制!';
-            setTimeout(() => {
-                copyBtn.textContent = '复制';
-            }, 2000);
-        });
-
 
     </script>
 </body>

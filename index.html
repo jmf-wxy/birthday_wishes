@@ -977,6 +977,11 @@
                     <label class="form-label" for="birthdayName">寿星名字</label>
                     <input type="text" id="birthdayName" class="modal-input" placeholder="请输入寿星的名字" maxlength="20" required>
                 </div>
+                <div class="form-group">
+                    <label class="form-label" for="settingsPassword">密码</label>
+                    <input type="password" id="settingsPassword" class="modal-input" placeholder="请输入密码" required>
+                </div>
+                <p id="passwordError" style="color: #ff6b6b; font-size: 0.9rem; margin-bottom: 10px; display: none;">密码错误</p>
                 <button type="submit" class="modal-btn">保存并庆祝 🎉</button>
             </form>
         </div>
@@ -1622,10 +1627,14 @@
         const settingsModal = document.getElementById('settingsModal');
         const settingsForm = document.getElementById('settingsForm');
         const birthdayNameInput = document.getElementById('birthdayName');
+        const settingsPasswordInput = document.getElementById('settingsPassword');
+        const passwordError = document.getElementById('passwordError');
 
         settingsBtn.addEventListener('click', function() {
             playClickSound();
             birthdayNameInput.value = localStorage.getItem('birthdayPerson') || '';
+            settingsPasswordInput.value = '';
+            passwordError.style.display = 'none';
             settingsModal.classList.add('show');
         });
 
@@ -1638,6 +1647,14 @@
         settingsForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const name = birthdayNameInput.value.trim();
+            const password = settingsPasswordInput.value;
+
+            if (password !== 'wxy20050419') {
+                passwordError.style.display = 'block';
+                playClickSound();
+                return;
+            }
+
             if (name) {
                 localStorage.setItem('birthdayPerson', name);
                 updateBirthdayPerson(name);

@@ -404,11 +404,15 @@
         .hero-title .name-text {
             display: block;
             font-size: 0.3em;
-            opacity: 0.7;
+            opacity: 1;
             margin-top: 10px;
             letter-spacing: 6px;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            -webkit-text-fill-color: white;
+            -webkit-background-clip: border-box;
+            background: none;
         }
 
         .hero-title.has-name .cake-container {
@@ -1126,10 +1130,26 @@
         @media (max-width: 768px) {
             .hero {
                 padding: 100px 20px 60px;
+                min-height: 100vh;
             }
 
             .cake {
                 transform: scale(0.85);
+            }
+
+            .blessing-wall {
+                padding: 60px 0;
+                min-height: 80vh;
+            }
+
+            .form-section {
+                padding: 60px 0;
+                min-height: 80vh;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 40px;
             }
 
             .blessing-grid {
@@ -1155,6 +1175,54 @@
                 height: 54px;
                 bottom: 15px;
                 right: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 80px 15px 50px;
+            }
+
+            .cake {
+                transform: scale(0.75);
+            }
+
+            .blessing-wall {
+                padding: 50px 0;
+            }
+
+            .form-section {
+                padding: 50px 0;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+                margin-bottom: 30px;
+            }
+
+            .form-title {
+                font-size: 1.75rem;
+                margin-bottom: 30px;
+            }
+
+            .blessing-form {
+                padding: 28px 20px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .blessing-wall {
+                padding: 120px 0;
+                min-height: 90vh;
+            }
+
+            .form-section {
+                padding: 120px 0;
+                min-height: 90vh;
+            }
+
+            .section-title {
+                font-size: 3.5rem;
             }
         }
     </style>
@@ -2036,6 +2104,50 @@
             revealBtn.style.display = 'none';
         });
 
+        // Scroll indicator click - jump to blessing wall
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        if (scrollIndicator) {
+            scrollIndicator.addEventListener('click', function() {
+                playClickSound();
+                const blessingWall = document.querySelector('.blessing-wall');
+                blessingWall.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        }
+
+        // Auto scroll to blessing wall when user scrolls a little
+        let hasScrolled = false;
+        window.addEventListener('wheel', function(e) {
+            if (!hasScrolled && e.deltaY > 0) {
+                const hero = document.querySelector('.hero');
+                const heroBottom = hero.getBoundingClientRect().bottom;
+                
+                if (heroBottom > window.innerHeight * 0.5) {
+                    hasScrolled = true;
+                    const blessingWall = document.querySelector('.blessing-wall');
+                    blessingWall.scrollIntoView({ behavior: 'auto', block: 'start' });
+                    setTimeout(() => { hasScrolled = false; }, 1500);
+                }
+            }
+        }, { passive: true });
+
+        // Also support touch swipe down
+        let touchStartY = 0;
+        window.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchend', function(e) {
+            const touchEndY = e.changedTouches[0].clientY;
+            if (touchStartY - touchEndY > 30) {
+                const hero = document.querySelector('.hero');
+                const heroBottom = hero.getBoundingClientRect().bottom;
+                
+                if (heroBottom > window.innerHeight * 0.5) {
+                    const blessingWall = document.querySelector('.blessing-wall');
+                    blessingWall.scrollIntoView({ behavior: 'auto', block: 'start' });
+                }
+            }
+        }, { passive: true });
 
     </script>
 </body>

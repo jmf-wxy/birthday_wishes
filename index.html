@@ -1565,12 +1565,12 @@
             return isValid;
         }
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             if (!validateForm()) return;
 
-            saveBlessing(nameInput.value.trim(), messageInput.value.trim());
+            await saveBlessing(nameInput.value.trim(), messageInput.value.trim());
 
             nameInput.value = '';
             messageInput.value = '';

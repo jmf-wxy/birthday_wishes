@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 生日快乐！</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #FFFFFF;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Settings Button */
+        .settings-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+        }
+
+        /* Share Button */
+        .share-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #6BCB77 0%, #4CAF50 100%);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(107, 203, 119, 0.4);
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 203, 119, 0.5);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            color: #333;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #333;
+        }
+
+        .modal-form {
+            margin-bottom: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #FF6B9D;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8E53 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        /* Share Modal Specific */
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .share-link-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .copy-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            background: #667eea;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #5a6fd6;
+        }
+
+        .share-note {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 80px 20px 40px;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: bounceIn 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            opacity: 0.9;
+            margin-bottom: 60px;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cake Section */
+        .cake-container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .cake-container:hover {
+            transform: scale(1.05);
+        }
+
+        .cake {
+            position: relative;
+            width: 280px;
+            height: 300px;
+        }
+
+        .cake-layer {
+            position: absolute;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .cake-layer-1 {
+            bottom: 0;
+            width: 280px;
+            height: 80px;
+            background: linear-gradient(to bottom, #F8E1A6 0%, #E8C96A 100%);
+        }
+
+        .cake-layer-1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(to bottom, #FFB6C1, #FF69B4);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .cake-layer-2 {
+            bottom: 80px;
+            width: 240px;
+            height: 70px;
+            left: 20px;
+            background: linear-gradient(to bottom, #FFE4B5 0%, #FFD700 100%);
+        }
+
+        .cake-layer-2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 18px;
+            background: linear-gradient(to bottom, #87CEEB, #4169E1);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .cake-layer-3 {
+            bottom: 150px;
+            width: 200px;
+            height: 60px;
+            left: 40px;
+            background: linear-gradient(to bottom, #FFF0F5 0%, #FFB6C1 100%);
+        }
+
+        .cake-layer-3::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background: linear-gradient(to bottom, #98FB98, #32CD32);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .candles {
+            position: absolute;
+            bottom: 210px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 25px;
+        }
+
+        .candle {
+            width: 12px;
+            height: 50px;
+            background: linear-gradient(to right, #FF69B4, #FF1493, #FF69B4);
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .flame {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 35px;
+            background: radial-gradient(ellipse at bottom, #FFD93D 0%, #FF6B6B 50%, transparent 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flicker 0.3s ease-in-out infinite alternate;
+        }
+
+        .flame::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 15px;
+            background: radial-gradient(ellipse at bottom, #FFF 0%, #FFD93D 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+            100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+        }
+
+        .candle.blown .flame {
+            animation: blowOut 0.5s ease-out forwards;
+        }
+
+        @keyframes blowOut {
+            0% { opacity: 1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.5; transform: translateX(-50%) scale(1.5) rotate(15deg); }
+            100% { opacity: 0; transform: translateX(-50%) scale(2) rotate(30deg); }
+        }
+
+        .cherry {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle at 30% 30%, #FF6B6B, #DC143C);
+            border-radius: 50%;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .cherry-1 {
+            bottom: 215px;
+            left: 70px;
+        }
+
+        .cherry-2 {
+            bottom: 220px;
+            left: 190px;
+        }
+
+        .cherry::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            width: 2px;
+            height: 15px;
+            background: #228B22;
+            transform: translateX(-50%);
+        }
+
+        .instruction {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Blessing Wall */
+        .blessing-wall {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .blessing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .blessing-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: cardIn 0.5s ease-out both;
+        }
+
+        .blessing-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .blessing-header {
+            height: 8px;
+        }
+
+        .blessing-content {
+            padding: 20px 24px 24px;
+        }
+
+        .blessing-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .blessing-name::before {
+            content: '🌟';
+        }
+
+        .blessing-message {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .blessing-time {
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            opacity: 0.7;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            font-size: 1.2rem;
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .blessing-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-family: inherit;
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #FFD93D;
+            box-shadow: 0 0 20px rgba(255, 217, 61, 0.3);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #999;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-error {
+            color: #FF6B6B;
+            font-size: 0.9rem;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8E53 100%);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(255, 107, 157, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Canvas for fireworks */
+        #fireworks-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            top: -10px;
+            width: 12px;
+            height: 12px;
+            pointer-events: none;
+            z-index: 999;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #6BCB77 0%, #4CAF50 100%);
+            color: white;
+            padding: 30px 50px;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .success-message.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 30px;
+            height: 50px;
+            border: 2px solid white;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 10px;
+            background: white;
+            border-radius: 3px;
+            animation: scrollDot 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollDot {
+            0%, 100% { top: 8px; opacity: 1; }
+            50% { top: 20px; opacity: 0.3; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .cake {
+                transform: scale(0.8);
+            }
+
+            .blessing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .blessing-form {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="fireworks-canvas"></canvas>
+
+    <button class="share-btn" id="shareBtn">🔗 分享</button>
+    <button class="settings-btn" id="settingsBtn">⚙️</button>
+
+    <div class="success-message" id="successMessage">🎉 祝福已送达！</div>
+
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <h2 class="modal-title">🎂 设置寿星</h2>
+            <form class="modal-form" id="settingsForm">
+                <div class="form-group">
+                    <label class="form-label" for="birthdayName">寿星名字</label>
+                    <input type="text" id="birthdayName" class="modal-input" placeholder="请输入寿星的名字" maxlength="20" required>
+                </div>
+                <button type="submit" class="modal-btn">保存</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal">
+            <h2 class="modal-title">🔗 分享给朋友</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 10px;">让朋友们来送上祝福吧！</p>
+            <div class="share-link-container">
+                <input type="text" class="share-link-input" id="shareLink" readonly>
+                <button class="copy-btn" id="copyBtn">复制</button>
+            </div>
+            <p class="share-note">复制链接后发送给朋友，朋友打开即可送上祝福</p>
+        </div>
+    </div>
+
+    <section class="hero">
+        <h1 class="hero-title" id="heroTitle">🎂 生日快乐 🎂</h1>
+        <p class="hero-subtitle" id="heroSubtitle">愿你的每一天都像今天一样灿烂美好</p>
+
+        <div class="cake-container" id="cakeContainer">
+            <div class="cake">
+                <div class="cake-layer cake-layer-1"></div>
+                <div class="cake-layer cake-layer-2"></div>
+                <div class="cake-layer cake-layer-3"></div>
+                <div class="cherry cherry-1"></div>
+                <div class="cherry cherry-2"></div>
+                <div class="candles">
+                    <div class="candle" data-index="0"><div class="flame"></div></div>
+                    <div class="candle" data-index="1"><div class="flame"></div></div>
+                    <div class="candle" data-index="2"><div class="flame"></div></div>
+                    <div class="candle" data-index="3"><div class="flame"></div></div>
+                    <div class="candle" data-index="4"><div class="flame"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <p class="instruction" id="instruction">👆 点击蛋糕吹灭蜡烛</p>
+
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <section class="blessing-wall">
+        <div class="container">
+            <h2 class="section-title">💝 祝福墙 💝</h2>
+            <div class="blessing-grid" id="blessingGrid">
+            </div>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="container">
+            <div class="blessing-form">
+                <h2 class="form-title">✍️ 送上祝福</h2>
+                <form id="blessingForm">
+                    <div class="form-group">
+                        <label class="form-label" for="name">你的名字</label>
+                        <input type="text" id="name" class="form-input" placeholder="请输入你的名字" maxlength="20" required>
+                        <p class="form-error" id="nameError">请输入你的名字</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="message">祝福语</label>
+                        <textarea id="message" class="form-textarea" placeholder="写下你对寿星的祝福..." maxlength="200" required></textarea>
+                        <p class="form-error" id="messageError">请输入祝福语</p>
+                    </div>
+                    <button type="submit" class="submit-btn">🎁 送祝福</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>Made with 💖 for your special day</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('fireworks-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 3 + 1;
+                this.velocityX = (Math.random() - 0.5) * 8;
+                this.velocityY = (Math.random() - 0.5) * 8;
+                this.gravity = 0.1;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.01;
+            }
+
+            update() {
+                this.velocityY += this.gravity;
+                this.x += this.velocityX;
+                this.y += this.velocityY;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function createFirework(x, y) {
+            const colors = ['#FF6B9D', '#FFD93D', '#6BCB77', '#4ECDC4', '#FF8E53', '#A855F7'];
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((particle, index) => {
+                particle.update();
+                particle.draw();
+
+                if (particle.alpha <= 0) {
+                    particles.splice(index, 1);
+                }
+            });
+
+            if (particles.length > 0) {
+                animationId = requestAnimationFrame(animate);
+            }
+        }
+
+        function launchFireworks() {
+            const positions = [
+                [canvas.width * 0.25, canvas.height * 0.3],
+                [canvas.width * 0.5, canvas.height * 0.2],
+                [canvas.width * 0.75, canvas.height * 0.3],
+                [canvas.width * 0.35, canvas.height * 0.4],
+                [canvas.width * 0.65, canvas.height * 0.4]
+            ];
+
+            positions.forEach((pos, index) => {
+                setTimeout(() => {
+                    createFirework(pos[0], pos[1]);
+                    if (!animationId) animate();
+                }, index * 200);
+            });
+        }
+
+        function createConfetti() {
+            const colors = ['#FF6B9D', '#FFD93D', '#6BCB77', '#4ECDC4', '#FF8E53', '#A855F7'];
+            const confettiCount = 50;
+
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 50);
+            }
+        }
+
+        let candlesBlown = 0;
+        const totalCandles = 5;
+        let candlesBlownOut = false;
+
+        document.getElementById('cakeContainer').addEventListener('click', function() {
+            if (candlesBlownOut) return;
+
+            const candles = document.querySelectorAll('.candle');
+
+            candles.forEach((candle, index) => {
+                setTimeout(() => {
+                    candle.classList.add('blown');
+                }, index * 150);
+            });
+
+            setTimeout(() => {
+                candlesBlownOut = true;
+                document.getElementById('instruction').textContent = '🎉 许个愿吧！🎉';
+                document.getElementById('instruction').style.animation = 'none';
+                launchFireworks();
+                createConfetti();
+            }, totalCandles * 150 + 300);
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.cake-container') || e.target.closest('.blessing-form')) return;
+            createFirework(e.clientX, e.clientY);
+            if (!animationId) animate();
+        });
+
+        const blessingColors = [
+            'linear-gradient(135deg, #FF6B9D 0%, #FF8E53 100%)',
+            'linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%)',
+            'linear-gradient(135deg, #A855F7 0%, #6366F1 100%)',
+            'linear-gradient(135deg, #FFD93D 0%, #FF8E53 100%)',
+            'linear-gradient(135deg, #6BCB77 0%, #4CAF50 100%)'
+        ];
+
+        function loadBlessings() {
+            const blessings = JSON.parse(localStorage.getItem('birthdayBlessings') || '[]');
+            const grid = document.getElementById('blessingGrid');
+
+            if (blessings.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎁</div>
+                        <p class="empty-state-text">还没有祝福，快来写下第一条吧！</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = blessings.map((blessing, index) => `
+                <div class="blessing-card" style="animation-delay: ${index * 0.1}s">
+                    <div class="blessing-header" style="background: ${blessing.color}"></div>
+                    <div class="blessing-content">
+                        <div class="blessing-name">${escapeHtml(blessing.name)}</div>
+                        <p class="blessing-message">${escapeHtml(blessing.message)}</p>
+                        <p class="blessing-time">${formatTime(blessing.timestamp)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return '刚刚';
+            if (diff < 3600000) return Math.floor(diff / 60000) + ' 分钟前';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + ' 小时前';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + ' 天前';
+
+            return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function saveBlessing(name, message) {
+            const blessings = JSON.parse(localStorage.getItem('birthdayBlessings') || '[]');
+            const newBlessing = {
+                id: Date.now(),
+                name: name,
+                message: message,
+                timestamp: new Date().toISOString(),
+                color: blessingColors[Math.floor(Math.random() * blessingColors.length)]
+            };
+
+            blessings.unshift(newBlessing);
+            localStorage.setItem('birthdayBlessings', JSON.stringify(blessings));
+        }
+
+        const form = document.getElementById('blessingForm');
+        const nameInput = document.getElementById('name');
+        const messageInput = document.getElementById('message');
+        const nameError = document.getElementById('nameError');
+        const messageError = document.getElementById('messageError');
+        const successMessage = document.getElementById('successMessage');
+
+        function validateForm() {
+            let isValid = true;
+
+            nameError.classList.remove('show');
+            messageError.classList.remove('show');
+
+            if (!nameInput.value.trim()) {
+                nameError.classList.add('show');
+                isValid = false;
+            }
+
+            if (!messageInput.value.trim()) {
+                messageError.classList.add('show');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!validateForm()) return;
+
+            saveBlessing(nameInput.value.trim(), messageInput.value.trim());
+
+            nameInput.value = '';
+            messageInput.value = '';
+
+            successMessage.classList.add('show');
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 2000);
+
+            loadBlessings();
+
+            const grid = document.getElementById('blessingGrid');
+            const firstCard = grid.querySelector('.blessing-card');
+            if (firstCard) {
+                firstCard.style.animation = 'none';
+                firstCard.offsetHeight;
+                firstCard.style.animation = 'cardIn 0.5s ease-out both';
+            }
+        });
+
+        loadBlessings();
+
+        const birthdayPerson = localStorage.getItem('birthdayPerson') || '';
+        if (birthdayPerson) {
+            updateBirthdayPerson(birthdayPerson);
+        }
+
+        function updateBirthdayPerson(name) {
+            const heroTitle = document.getElementById('heroTitle');
+            const heroSubtitle = document.getElementById('heroSubtitle');
+            heroTitle.innerHTML = `🎂 ${escapeHtml(name)}生日快乐 🎂`;
+            heroSubtitle.textContent = `${escapeHtml(name)}，愿你的每一天都像今天一样灿烂美好`;
+            document.title = `🎂 ${escapeHtml(name)}生日快乐！`;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const nameFromUrl = urlParams.get('name');
+        if (nameFromUrl) {
+            updateBirthdayPerson(decodeURIComponent(nameFromUrl));
+            localStorage.setItem('birthdayPerson', decodeURIComponent(nameFromUrl));
+        }
+
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsForm = document.getElementById('settingsForm');
+        const birthdayNameInput = document.getElementById('birthdayName');
+
+        settingsBtn.addEventListener('click', function() {
+            birthdayNameInput.value = localStorage.getItem('birthdayPerson') || '';
+            settingsModal.classList.add('show');
+        });
+
+        settingsModal.addEventListener('click', function(e) {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('show');
+            }
+        });
+
+        settingsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = birthdayNameInput.value.trim();
+            if (name) {
+                localStorage.setItem('birthdayPerson', name);
+                updateBirthdayPerson(name);
+                settingsModal.classList.remove('show');
+                launchFireworks();
+                createConfetti();
+            }
+        });
+
+        const shareBtn = document.getElementById('shareBtn');
+        const shareModal = document.getElementById('shareModal');
+        const shareLink = document.getElementById('shareLink');
+        const copyBtn = document.getElementById('copyBtn');
+
+        shareBtn.addEventListener('click', function() {
+            const personName = localStorage.getItem('birthdayPerson');
+            let shareUrl = window.location.origin + window.location.pathname;
+            if (personName) {
+                shareUrl += '?name=' + encodeURIComponent(personName);
+            }
+            shareLink.value = shareUrl;
+            shareModal.classList.add('show');
+        });
+
+        shareModal.addEventListener('click', function(e) {
+            if (e.target === shareModal) {
+                shareModal.classList.remove('show');
+            }
+        });
+
+        copyBtn.addEventListener('click', function() {
+            shareLink.select();
+            document.execCommand('copy');
+            copyBtn.textContent = '已复制!';
+            setTimeout(() => {
+                copyBtn.textContent = '复制';
+            }, 2000);
+        });
+
+        if (!localStorage.getItem('birthdayBlessings') || JSON.parse(localStorage.getItem('birthdayBlessings')).length === 0) {
+            const sampleBlessings = [
+                { id: 1, name: '小明', message: '生日快乐！愿你新的一岁万事如意，每天都开心快乐！', timestamp: new Date(Date.now() - 86400000).toISOString(), color: blessingColors[0] },
+                { id: 2, name: '小红', message: '祝你生日快乐！愿你的愿望都能实现，幸福美满！', timestamp: new Date(Date.now() - 172800000).toISOString(), color: blessingColors[1] },
+                { id: 3, name: '老朋友', message: '生日快乐！感谢有你，希望你一切都好！', timestamp: new Date(Date.now() - 259200000).toISOString(), color: blessingColors[2] }
+            ];
+            localStorage.setItem('birthdayBlessings', JSON.stringify(sampleBlessings));
+            loadBlessings();
+        }
+    </script>
+</body>
+</html>

@@ -1906,7 +1906,7 @@
         function updateBirthdayPerson(name) {
             const heroTitle = document.getElementById('heroTitle');
             const heroSubtitle = document.getElementById('heroSubtitle');
-            heroTitle.innerHTML = `🎂 ${escapeHtml(name)}生日快乐<span class="name-text">HAPPY BIRTHDAY</span> 🎂`;
+            heroTitle.innerHTML = `🎂 ${escapeHtml(name)}生日快乐 🎂<span class="name-text">HAPPY BIRTHDAY</span>`;
             heroTitle.classList.add('has-name');
             heroSubtitle.textContent = `${escapeHtml(name)}，愿你的每一天都像今天一样灿烂美好`;
             document.title = `🎂 ${escapeHtml(name)}生日快乐！`;

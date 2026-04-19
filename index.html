@@ -402,16 +402,17 @@
         }
 
         .hero-title .name-text {
-            display: inline;
-            font-size: 0.35em;
-            opacity: 0.85;
-            margin-left: 12px;
-            letter-spacing: 3px;
-            vertical-align: middle;
+            display: block;
+            font-size: 0.3em;
+            opacity: 0.7;
+            margin-top: 10px;
+            letter-spacing: 6px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .hero-title.has-name .cake-container {
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         @keyframes glow {
@@ -420,8 +421,8 @@
         }
 
         @keyframes nameGlow {
-            0%, 100% { filter: drop-shadow(0 0 25px rgba(255, 217, 61, 0.6)); }
-            50% { filter: drop-shadow(0 0 45px rgba(255, 217, 61, 0.9)); }
+            0%, 100% { filter: none; }
+            50% { filter: none; }
         }
 
         .hero-subtitle {
